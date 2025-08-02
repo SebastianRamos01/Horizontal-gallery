@@ -26,9 +26,6 @@ useEffect(() => {
         <div className="h-screen flex items-center sticky top-0">
           <Carrousel></Carrousel>
         </div>
-        <div className="fixed bottom-0 left-1/2 -translate-x-1/2 py-5">
-          Scroll Down
-        </div>
       </main>
     </>
   );

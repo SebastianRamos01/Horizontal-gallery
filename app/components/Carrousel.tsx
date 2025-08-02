@@ -14,11 +14,11 @@ export default function Carrousel() {
     const images = [
         {
             src: '/images/Pexels Photo by Alfred Franz.png',
-            alt: 'img2',
+            alt: 'img1',
         },
         {
             src: '/images/Pexels Photo by Adrien Olichon.png',
-            alt: 'img1',
+            alt: 'img2',
         },
         {
             src: '/images/Pexels Photo by Eyüpcan Timur.png',
@@ -44,6 +44,26 @@ export default function Carrousel() {
             src: '/images/Pexels Photo by Shawn Henry.png',
             alt: 'img8',
         },
+        {
+            src: '/images/Pexels Photo by Elanur Buse.png',
+            alt: 'img9',
+        },
+        {
+            src: '/images/Pexels Photo by Léo Gilmant-1.png',
+            alt: 'img10',
+        },
+        {
+            src: '/images/Pexels Photo by Léo Gilmant.png',
+            alt: 'img11',
+        },
+        {
+            src: '/images/Pexels Photo by Ornella Iseppi.png',
+            alt: 'img12',
+        },
+        {
+            src: '/images/Pexels Photo by Raymond  li.png',
+            alt: 'img13',
+        },
     ]
 
     const [isLoading, setIsloading] = useState(true)
@@ -63,8 +83,8 @@ export default function Carrousel() {
         if(loadedImages === images.length) {
             gsap.to(loaderRef.current, {
                 opacity: 0,
-                pointerEvents: 'none',
-                duration: 0.5,
+                ease: 'power3.in',
+                duration: 0.8,
                 onComplete: () => setIsloading(false)
             })
         }
@@ -124,11 +144,17 @@ export default function Carrousel() {
         )}
         <div ref={carrouselConrtainerRef} className='overflow-hidden relative h-full flex items-center'>
             <div className='absolute top-0 size-full'>
-                <ul  className='size-full relative'>
+                <ul className='size-full relative'>
                     {images.map((img, i) => (
-                    <li key={i} id={`bgImg-${i}`} 
+                    <li key={i} 
+                        id={`bgImg-${i}`} 
                         className='absolute top-0 size-full object-cover opacity-0'>
-                        <Image src={img.src} alt={img.alt} objectFit='cover' fill/>
+                        <Image 
+                            src={img.src} 
+                            alt={img.alt} 
+                            className='object-cover' 
+                            fill
+                            onLoad={handleImageLoad}/>
                     </li>
                 ))}
                 </ul>
@@ -144,10 +170,15 @@ export default function Carrousel() {
                             alt={img.alt} 
                             width={1000} 
                             height={1000}
-                            onLoad={handleImageLoad} />
+                            onLoad={handleImageLoad}/>
                     </li>
                 ))}
             </ul>
+            <div className="fixed bottom-0 left-1/2 -translate-x-1/2 py-5">
+                <div>
+                    Scroll Down
+                </div>
+            </div>
         </div>
     </>
   )

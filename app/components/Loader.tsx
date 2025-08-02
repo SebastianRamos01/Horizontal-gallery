@@ -1,13 +1,14 @@
 import React from 'react'
 
 export default function Loader() {
-
-    // Exit animation
-
-
   return (        
     <div>
+      <div>
+        Welcome
+      </div>
+      <div>
         Loading ...
+      </div>
     </div>
   )
 }

@@ -1,5 +1,7 @@
 import React from 'react'
 
+const description = 'Photographer passionate about capturing the essence of every moment.'
+
 export default function Header() {
   return (
     <header className='h-20 flex items-center fixed top-0 z-10'>
@@ -8,7 +10,7 @@ export default function Header() {
                 Lyra Astra
             </h1>
             <p className='col-start-3 col-span-6 leading-tight'>
-                You can copy and paste your own content in to see what it looks like with these font combinations.
+                {description}
             </p>
         </nav>
     </header>
