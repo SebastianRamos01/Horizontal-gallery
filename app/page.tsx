@@ -12,7 +12,7 @@ useEffect(() => {
   const lenis = new Lenis();
 
   // Use requestAnimationFrame to continuously update the scroll
-  function raf(time : any) {
+  function raf(time : number) {
     lenis.raf(time);
     requestAnimationFrame(raf);
   }

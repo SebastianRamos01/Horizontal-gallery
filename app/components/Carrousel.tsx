@@ -66,88 +66,83 @@ export default function Carrousel() {
         },
     ]
 
-    const [isLoading, setIsloading] = useState(true)
-    const [loadedImages, setLoadedImages] = useState(0)
+    const [isLoading, setIsLoading] = useState(true)
+    const loadedCount = useRef(0)
     const loaderRef = useRef<HTMLDivElement>(null)
 
-    const handleImageLoad = () => {
-        setLoadedImages((prev) => prev + 1); 
-    }
-
     const carrouselRef = useRef<HTMLUListElement>(null)
-    const carrouselConrtainerRef = useRef<HTMLDivElement>(null)
-    const [imgIndex, setImgIndex] = React.useState(null)
+    const carrouselContainerRef = useRef<HTMLDivElement>(null)
+    const bgRefs = useRef<HTMLLIElement[]>([])
 
-    // Set loading state to false after images are loaded
-    useEffect(() => {
-        if(loadedImages === images.length) {
-            gsap.to(loaderRef.current, {
-                opacity: 0,
-                ease: 'power3.in',
-                duration: 0.8,
-                onComplete: () => setIsloading(false)
+    const handleImageLoad = () => {
+        loadedCount.current += 1
+        if (loadedCount.current === images.length) {
+        gsap.to(loaderRef.current, {
+            opacity: 0,
+            ease: 'power3.in',
+            duration: 0.8,
+            onComplete: () => setIsLoading(false),
             })
         }
-    }, [loadedImages, images.length])
+    }
 
-    const handleHoverEnter = (index: any) => {
-        setImgIndex(index)
-
-        images.forEach((_, i) => {
-            gsap.to('#bgImg-'+ i, {
-                opacity: i === index ? 1 : 0,
-            })
+    // Hover animación (solo afecta al item correspondiente)
+    const handleHoverEnter = (index: number) => {
+            bgRefs.current.forEach((bg, i) => {
+            gsap.to(bg, { opacity: i === index ? 1 : 0, duration: 0.4 })
         })
-
     }
 
     const handleHoverLeave = () => {
-        setImgIndex(null)
-
-        images.forEach((_, i) => {
-            gsap.to('#bgImg-'+ i, {
-                opacity:  0,
-            })
+            bgRefs.current.forEach((bg) => {
+            gsap.to(bg, { opacity: 0, duration: 0.4 })
         })
     }
 
-    // Carrousel animation 
     useGSAP(() => {
-
         const carrousel = carrouselRef.current
-        const carrouselconatiner = carrouselConrtainerRef.current
+        const container = carrouselContainerRef.current
+        if (!carrousel || !container) return
 
-        if (!carrousel || !carrouselconatiner) return;
-
-        const maxScrollX = carrousel.scrollWidth - carrouselconatiner.offsetWidth;
+        const maxScrollX = carrousel.scrollWidth - container.offsetWidth
 
         const tl = gsap.timeline({
             scrollTrigger: {
                 trigger: '#main-container',
                 start: 'top top',
                 end: 'bottom bottom',
-                scrub: true
-            }
+                scrub: true,
+            },
         })
 
-        tl.to('#carrousel', {
-            x: -maxScrollX,
-        })
-    })
+        tl.to(carrousel, { x: -maxScrollX })
+
+        return () => {
+            tl.kill()
+            ScrollTrigger.getAll().forEach(trigger => trigger.kill())
+        }
+    }, [])
 
   return (
     <>
         {isLoading && (
-            <div ref={loaderRef} className='absolute top-0 z-20 w-full h-[100dvh] flex items-center justify-center bg-background'>
-                <Loader></Loader>
+            <div
+                ref={loaderRef}
+                className="absolute top-0 z-20 w-full h-[100dvh] flex items-center justify-center bg-background"
+                >
+                <Loader />
             </div>
         )}
-        <div ref={carrouselConrtainerRef} className='overflow-hidden relative h-full flex items-center'>
+        <div 
+            id='carrousel-container'
+            ref={carrouselContainerRef}
+            className="overflow-hidden relative h-full flex items-center"
+            >
             <div className='absolute top-0 size-full'>
                 <ul className='size-full relative'>
                     {images.map((img, i) => (
                     <li key={i} 
-                        id={`bgImg-${i}`} 
+                        ref={el => { if (el) bgRefs.current[i] = el }}
                         className='absolute top-0 size-full object-cover opacity-0'>
                         <Image 
                             src={img.src} 
@@ -159,7 +154,9 @@ export default function Carrousel() {
                 ))}
                 </ul>
             </div>
-            <ul id='carrousel' ref={carrouselRef} className=' px-5 flex gap-5 items-center'>
+            <ul 
+                ref={carrouselRef} 
+                className=' px-5 flex gap-5 items-center'>
                 {images.map((img, i) => (
                     <li key={i} 
                         onMouseEnter={() => handleHoverEnter(i)}
