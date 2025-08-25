@@ -21,9 +21,9 @@ useEffect(() => {
 
   return (
     <>
-      <main id="main-container" className="h-[150dvh] relative">
+      <main id="main-container" className="h-[800dvh] relative">
         <Header></Header>
-        <div className="h-screen flex items-center sticky top-0">
+        <div className="h-[100dvh] flex items-center sticky top-0">
           <Carrousel></Carrousel>
         </div>
       </main>
